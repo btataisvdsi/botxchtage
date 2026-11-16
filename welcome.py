@@ -17,22 +17,26 @@ def setup_welcome(bot):
             background = Editor("welcome_bg.png")
 
             display_name = member.name
-            if len(display_name) > 12:
-                display_name = display_name[:11] + "..."
+            if len(display_name) > 10: # قص الاسم إلا كان طويل بزاف باش ما يخرجش على البوطون
+                display_name = display_name[:9] + "..."
 
             avatar = await load_image_async(str(member.display_avatar.url))
             
-            # 🔴 الدائرة الحمرا
-            profile = Editor(avatar).resize((360, 360)).circle_image()
-            background.paste(profile, (110, 205))
+            # 🔴 مقاس الصورة (210x210) باش تدخل بالضبط فـ الدائرة الحمرا
+            profile = Editor(avatar).resize((210, 210)).circle_image()
+            
+            # 📍 لصق الصورة فـ البلاصة الفارغة اللي وسط الدائرة
+            background.paste(profile, (65, 105))
 
-            # ✍️ الخطوط
-            font_name = Font.poppins(size=85, variant="bold")
-            font_member = Font.poppins(size=45, variant="bold")
+            # ✍️ تصغير الخطوط باش تمشي مع حجم الصورة الجديدة
+            font_name = Font.poppins(size=55, variant="bold")
+            font_member = Font.poppins(size=35, variant="bold")
 
-            # 🏷️ الاسم ورقم العضو
-            background.text((780, 215), display_name, color="white", font=font_name, align="left")
-            background.text((800, 365), f"Member #{member.guild.member_count}", color="white", font=font_member, align="left")
+            # 🏷️ كتابة الاسم فوق فـ البوطون اللي فيه التاج (التاج)
+            background.text((350, 165), display_name, color="white", font=font_name, align="left")
+            
+            # 🔢 كتابة رقم العضو فـ البوطون الصغير اللي لتحت
+            background.text((380, 235), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
 
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
@@ -47,5 +51,4 @@ def setup_welcome(bot):
 
         except Exception as e:
             print(f"❌ Error in welcome: {e}")
-            # 🚨 هاد السطر غادي يصيفط ليك الخطأ فـ ديسكورد باش نعرفو السبب
-            await channel.send(f"⚠️ Error in welcome image: `{e}`\n{Fallback: Welcome {member.mention}!}")
+            await channel.send(f"⚠️ Error in welcome image: `{e}`\nFallback: Welcome {member.mention}!")
