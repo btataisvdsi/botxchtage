@@ -13,30 +13,31 @@ def setup_welcome(bot):
             return
 
         try:
-            # 🖼️ تحميل الخلفية
-            background = Editor("welcome_bg.png")
+            # 🖼️ تحميل الخلفية وتصغيرها لمقاس موحد باش ما يتخربقش الشكل
+            background = Editor("welcome_bg.png").resize((1024, 430))
 
             display_name = member.name
-            if len(display_name) > 10: # قص الاسم إلا كان طويل بزاف باش ما يخرجش على البوطون
-                display_name = display_name[:9] + "..."
+            # قص الاسم إلا كان طويل بزاف باش ما يخرجش على البوطون
+            if len(display_name) > 11: 
+                display_name = display_name[:10] + "..."
 
             avatar = await load_image_async(str(member.display_avatar.url))
             
-            # 🔴 مقاس الصورة (210x210) باش تدخل بالضبط فـ الدائرة الحمرا
-            profile = Editor(avatar).resize((210, 210)).circle_image()
+            # 🔴 مقاس الصورة (195x195) باش تدخل بالضبط وسط الدائرة الحمرا
+            profile = Editor(avatar).resize((195, 195)).circle_image()
             
-            # 📍 لصق الصورة فـ البلاصة الفارغة اللي وسط الدائرة
-            background.paste(profile, (65, 105))
+            # 📍 لصق الصورة فـ البلاصة الفارغة وسط الدائرة (مقاسة على 1024x430)
+            background.paste(profile, (70, 115))
 
-            # ✍️ تصغير الخطوط باش تمشي مع حجم الصورة الجديدة
+            # ✍️ تصغير الخطوط باش تمشي مع المقاس الجديد
             font_name = Font.poppins(size=55, variant="bold")
             font_member = Font.poppins(size=35, variant="bold")
 
-            # 🏷️ كتابة الاسم فوق فـ البوطون اللي فيه التاج (التاج)
-            background.text((350, 165), display_name, color="white", font=font_name, align="left")
+            # 🏷️ كتابة الاسم فوق فـ البوطون اللي فيه التاج (تعديل الإحداثيات)
+            background.text((330, 115), display_name, color="white", font=font_name, align="left")
             
-            # 🔢 كتابة رقم العضو فـ البوطون الصغير اللي لتحت
-            background.text((380, 235), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
+            # 🔢 كتابة رقم العضو فـ البوطون الصغير اللي لتحت (تعديل الإحداثيات)
+            background.text((450, 200), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
 
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
