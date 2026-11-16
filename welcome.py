@@ -13,45 +13,61 @@ def setup_welcome(bot):
             return
 
         try:
-            # 🖼️ تحميل الصورة اللي عطيتي (خاصها تكون مرفوعة فـ GitHub بنفس السمية)
+            # 🖼️ تحميل الخلفية الجديدة
             background = Editor("welcome_bg.png")
-            
-            # 📐 أبعاد الصورة ديالك تقريباً 1024x430
-            # 🖼️ تحويل صورة البروفيل لدائرة
+
+            # ✂️ تحديد الاسم (إلا كان طويل بزاف كنقصوه باش ما يخرجش على البوطون)
+            display_name = member.name
+            if len(display_name) > 12:
+                display_name = display_name[:11] + "..."
+
+            # 🖼️ تحميل صورة البروفيل
             avatar = await load_image_async(str(member.display_avatar.url))
-            profile = Editor(avatar).resize((170, 170)).circle_image()
+            
+            # 🔴 تحويل الصورة لدائرة ومقاسها باش تدخل فـ الدائرة الحمرا ديال الخلفية
+            # المقاس ديال الدائرة الداخلية تقريباً 360x360
+            profile = Editor(avatar).resize((360, 360)).circle_image()
 
-            # ⚪ رسم دائرة بيضاء محيطة بالبروفيل فـ الجهة اليسرى
-            background.ellipse((45, 130), width=180, height=180, outline="white", stroke_width=5)
-            background.paste(profile, (50, 135))
+            # 📍 لصق صورة البروفيل فـ الدائرة الحمرا (X=110, Y=205)
+            background.paste(profile, (110, 205))
 
-            # ✍️ الخطوط (إنجليزية فقط)
-            font_big = Font.poppins(size=55, variant="bold")
-            font_mid = Font.poppins(size=28, variant="regular")
+            # ✍️ الخطوط (خطوط سميكة وواضحة بحال التصميم)
+            font_name = Font.poppins(size=85, variant="bold")
+            font_member = Font.poppins(size=45, variant="bold")
 
-            # 📝 كتابة الاسم ورقم العضو بجانب الصورة
-            background.text((260, 150), f"{member.name}", color="white", font=font_big)
-            background.text((260, 220), f"Member #{member.guild.member_count}", color="#ffd700", font=font_mid)
+            # 🏷️ كتابة الاسم فـ البوطون الكبير (X=780, Y=215)
+            # استعملنا "center" باش يتوسط الاسم فـ البوطون
+            background.text(
+                (780, 215), 
+                display_name, 
+                color="white", 
+                font=font_name,
+                align="left"
+            )
 
+            # 🔢 كتابة رقم العضو فـ البوطون الصغير (X=800, Y=365)
+            background.text(
+                (800, 365), 
+                f"Member #{member.guild.member_count}", 
+                color="white", 
+                font=font_member,
+                align="left"
+            )
+
+            # تحويل الصورة لملف
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
             # 💬 رسالة الترحيب (إنجليزية بالكامل)
             embed = discord.Embed(
-                title="🎉 Welcome to XCharg PVP!",
-                description=f"{member.mention} has just joined the server! 🚀\n\n**Member Count:** `{member.guild.member_count}`",
-                color=0xFFD700 # لون ذهبي
+                description=f"Welcome {member.mention} to **XCHARG PVP**! 🚀",
+                color=0xFF0000 # لون أحمر باش يمشي مع التصميم
             )
             embed.set_image(url="attachment://welcome.png")
-            embed.set_footer(
-                text=f"XCharg PVP • {member.guild.name}",
-                icon_url=member.guild.icon.url if member.guild.icon else None
-            )
-
+            
             # 📤 صيفط الرسالة
-            await channel.send(content=f"Welcome {member.mention}!", embed=embed, file=file)
+            await channel.send(embed=embed, file=file)
             print(f"✅ Welcome message sent for {member.name}")
 
         except Exception as e:
             print(f"❌ Error in welcome: {e}")
-            # رسالة احتياطية إلا وقع شي مشكل فـ الصورة
             await channel.send(f"Welcome {member.mention} to **{member.guild.name}**!")
