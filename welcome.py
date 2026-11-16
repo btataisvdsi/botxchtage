@@ -13,29 +13,29 @@ def setup_welcome(bot):
             return
 
         try:
-            # 🖼️ تحميل الخلفية
+            # 🖼️ تحميل الخلفية بالمقاس الصحيح
             background = Editor("welcome_bg.png").resize((1024, 430))
 
             display_name = member.name
-            # قص الاسم إلا كان طويل بزاف
+            # قص الاسم باش ما يخرجش على الصندوق
             if len(display_name) > 11: 
                 display_name = display_name[:10] + "..."
 
             avatar = await load_image_async(str(member.display_avatar.url))
             
-            # 🔴 كبرنا الصورة شوية لـ (215x215) وعدلنا البلاصة ديالها باش تبقى فالوسط
-            profile = Editor(avatar).resize((215, 215)).circle_image()
-            background.paste(profile, (62, 108))
+            # 🔴 مقاس الصورة (210x210) مع البلاصة اللي كتوسطها فـ الدائرة الحمرا بالضبط
+            profile = Editor(avatar).resize((210, 210)).circle_image()
+            background.paste(profile, (70, 110)) 
 
             # ✍️ الخطوط
-            font_name = Font.poppins(size=38, variant="bold")
-            font_member = Font.poppins(size=28, variant="bold")
+            font_name = Font.poppins(size=36, variant="bold")
+            font_member = Font.poppins(size=26, variant="bold")
 
-            # 🏷️ الاسم: حركناه لليمين (X=495) باش ما يتلاقاش مع التاج
-            background.text((495, 115), display_name, color="white", font=font_name, align="center")
+            # 🏷️ الاسم: استعملنا align="left" باش يبدا من مورا التاج مباشرة (X=340)
+            background.text((340, 112), display_name, color="white", font=font_name, align="left")
             
-            # 🔢 رقم العضو: قربناه لـ كلمة Member (X=505)
-            background.text((505, 180), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
+            # 🔢 رقم العضو: درناه لصق حدا كلمة Member (X=535)
+            background.text((535, 180), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
 
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
