@@ -18,24 +18,24 @@ def setup_welcome(bot):
 
             display_name = member.name
             # قص الاسم إلا كان طويل بزاف
-            if len(display_name) > 12: 
-                display_name = display_name[:11] + "..."
+            if len(display_name) > 11: 
+                display_name = display_name[:10] + "..."
 
             avatar = await load_image_async(str(member.display_avatar.url))
             
-            # 🔴 صورة العضو فـ الدائرة الحمرا
-            profile = Editor(avatar).resize((195, 195)).circle_image()
-            background.paste(profile, (70, 115))
+            # 🔴 كبرنا الصورة شوية لـ (215x215) وعدلنا البلاصة ديالها باش تبقى فالوسط
+            profile = Editor(avatar).resize((215, 215)).circle_image()
+            background.paste(profile, (62, 108))
 
             # ✍️ الخطوط
             font_name = Font.poppins(size=38, variant="bold")
             font_member = Font.poppins(size=28, variant="bold")
 
-            # 🏷️ الاسم: هبطتو لتحت باش يدخل فـ البوطون ديال التاج (X=460, Y=115)
-            background.text((460, 115), display_name, color="white", font=font_name, align="center")
+            # 🏷️ الاسم: حركناه لليمين (X=495) باش ما يتلاقاش مع التاج
+            background.text((495, 115), display_name, color="white", font=font_name, align="center")
             
-            # 🔢 رقم العضو: حيدتو لليمين باش ما يتبقش مع كلمة Member (X=555, Y=190)
-            background.text((555, 190), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
+            # 🔢 رقم العضو: قربناه لـ كلمة Member (X=505)
+            background.text((505, 180), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
 
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
