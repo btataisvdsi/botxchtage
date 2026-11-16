@@ -17,27 +17,25 @@ def setup_welcome(bot):
             background = Editor("welcome_bg.png").resize((1024, 430))
 
             display_name = member.name
-            # قص الاسم إلا كان طويل بزاف باش ما يخرجش على البوطون الأسود
+            # قص الاسم إلا كان طويل بزاف
             if len(display_name) > 12: 
                 display_name = display_name[:11] + "..."
 
             avatar = await load_image_async(str(member.display_avatar.url))
             
-            # 🔴 مقاس الصورة (195x195) فـ وسط الدائرة (هنا مزيانة)
+            # 🔴 صورة العضو فـ الدائرة الحمرا
             profile = Editor(avatar).resize((195, 195)).circle_image()
             background.paste(profile, (70, 115))
 
-            # ✍️ تصغير الخطوط باش تمشي مع البوطونات
-            font_name = Font.poppins(size=40, variant="bold")
-            font_member = Font.poppins(size=30, variant="bold")
+            # ✍️ الخطوط
+            font_name = Font.poppins(size=38, variant="bold")
+            font_member = Font.poppins(size=28, variant="bold")
 
-            # 🏷️ كتابة الاسم (وسط البوطون الفوقاني)
-            # استعملت align="center" والبلاصة X=475 باش يتوسط فـ البوطون
-            background.text((475, 95), display_name, color="white", font=font_name, align="center")
+            # 🏷️ الاسم: هبطتو لتحت باش يدخل فـ البوطون ديال التاج (X=460, Y=115)
+            background.text((460, 115), display_name, color="white", font=font_name, align="center")
             
-            # 🔢 كتابة رقم العضو (فـ البوطون التحتاني حدا كلمة Member)
-            # البلاصة X=520 باش يجي من بعد كلمة Member
-            background.text((520, 180), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
+            # 🔢 رقم العضو: حيدتو لليمين باش ما يتبقش مع كلمة Member (X=555, Y=190)
+            background.text((555, 190), f"#{member.guild.member_count}", color="white", font=font_member, align="left")
 
             file = discord.File(fp=background.image_bytes, filename="welcome.png")
 
